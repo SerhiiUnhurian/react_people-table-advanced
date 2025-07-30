@@ -25,8 +25,6 @@ export const PeoplePage: React.FC = () => {
     setSelectedPersonSlug(slug);
   };
 
-  // console.log(people);
-
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const filterAndSortPeople = (people: Person[]) => {
     let filtered = [...people];

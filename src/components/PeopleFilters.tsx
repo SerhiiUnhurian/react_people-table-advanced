@@ -29,12 +29,14 @@ export const PeopleFilters = () => {
         <SearchLink params={{ sex: null }} className={!sex ? 'is-active' : ''}>
           All
         </SearchLink>
+
         <SearchLink
           className={sex === 'm' ? 'is-active' : ''}
           params={{ sex: 'm' }}
         >
           Male
         </SearchLink>
+
         <SearchLink
           className={sex === 'f' ? 'is-active' : ''}
           params={{ sex: 'f' }}
