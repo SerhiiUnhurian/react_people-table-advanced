@@ -1,5 +1,26 @@
+import React from 'react';
+import { Person } from '../types';
+import { PersonLink } from './PersonLink';
+import classNames from 'classnames';
+
+type Props = {
+  people: Person[];
+  selectedPersonSlug: string | null;
+  onSelectPerson: (slug: string) => void;
+};
+
 /* eslint-disable jsx-a11y/control-has-associated-label */
-export const PeopleTable = () => {
+export const PeopleTable: React.FC<Props> = ({
+  people,
+  onSelectPerson,
+  selectedPersonSlug,
+}) => {
+  const enhancedPeople: Person[] = people.map(person => ({
+    ...person,
+    mother: people.find(p => p.name === person.motherName),
+    father: people.find(p => p.name === person.fatherName),
+  }));
+
   return (
     <table
       data-cy="peopleTable"
@@ -57,22 +78,58 @@ export const PeopleTable = () => {
       </thead>
 
       <tbody>
-        <tr data-cy="person">
-          <td>
-            <a href="#/people/pieter-haverbeke-1602">Pieter Haverbeke</a>
-          </td>
-          <td>m</td>
-          <td>1602</td>
-          <td>1642</td>
-          <td>-</td>
-          <td>
-            <a href="#/people/lieven-van-haverbeke-1570">
-              Lieven van Haverbeke
-            </a>
-          </td>
-        </tr>
+        {enhancedPeople.map(person => {
+          const {
+            sex,
+            died,
+            born,
+            motherName,
+            fatherName,
+            mother,
+            father,
+            slug,
+          } = person;
 
-        <tr data-cy="person">
+          return (
+            <tr
+              data-cy="person"
+              className={classNames({
+                'has-background-warning': slug === selectedPersonSlug,
+              })}
+              key={slug}
+            >
+              <td>
+                <PersonLink person={person} onSelect={onSelectPerson} />
+              </td>
+
+              <td>{sex}</td>
+              <td>{born}</td>
+              <td>{died}</td>
+
+              <td>
+                {mother ? (
+                  <PersonLink person={mother} onSelect={onSelectPerson} />
+                ) : motherName ? (
+                  motherName
+                ) : (
+                  '-'
+                )}
+              </td>
+
+              <td>
+                {father ? (
+                  <PersonLink person={father} onSelect={onSelectPerson} />
+                ) : fatherName ? (
+                  fatherName
+                ) : (
+                  '-'
+                )}
+              </td>
+            </tr>
+          );
+        })}
+
+        {/* <tr data-cy="person">
           <td>
             <a className="has-text-danger" href="#/people/anna-van-hecke-1607">
               Anna van Hecke
@@ -638,7 +695,7 @@ export const PeopleTable = () => {
           <td>
             <a href="#/people/carolus-haverbeke-1832">Carolus Haverbeke</a>
           </td>
-        </tr>
+        </tr> */}
       </tbody>
     </table>
   );
